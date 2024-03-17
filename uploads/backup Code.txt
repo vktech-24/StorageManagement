@@ -1,0 +1,574 @@
+<?php
+// Database connection parameters
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "file_upload_download";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch data from MySQL
+$sql = "SELECT * FROM files ORDER BY upload_date DESC";
+$result = $conn->query($sql);
+
+// Display data in HTML table
+if ($result->num_rows > 0) {
+    echo "<table>
+    <tr><th>ID</th>
+    <th>view</th>
+    <th>Name</th>
+    <th>Delete</th>
+    </tr>";
+    while($row = $result->fetch_assoc()) {
+        echo "<tr>
+        <td>" . $row["id"] . "</td>
+        <td></td>
+        <td>" . $row["filename"] . "</td>
+        <td><button>Delete</button></td>
+        </tr>";
+    }
+    echo "</table>";
+} else {
+    echo "0 results";
+}
+
+// Close connection
+$conn->close();
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    th{
+        border:1px solid black;
+    }
+    table{
+        border:1px solid black;
+        width:100%;
+        background-color: yellow;
+    }
+  
+    td{
+       border:1px solid black;
+    }
+
+    th,table,td{
+        padding:10px;
+    }
+    td{
+        text-align:center;
+    }
+    button{
+        color:white;
+        padding:5px 25px;
+        border: none;
+        border-radius: 25px;
+        outline:none;
+        background-color: red;
+}
+</style>
+<body>
+</body>
+</html>
+
+---------
+
+ echo "";
+        ?>
+        <tr>
+            <td><?php echo $row['id']?></td>
+            <td><?php echo $row['filename']?></td>
+            <td><button>delete</button></td>
+        </tr>
+        <?php
+
+----------------------
+//for upload.php file backup
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teachers</title>
+<!--
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+-->
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<link rel="stylesheet" href="styles/teachers.css">
+</head>
+<body>
+    <div class="nav">
+        <div class="logo"><h2>For Logo</h2></div>
+        <div class="find">
+            <a href="">Upload History</a>
+            <a href="">About</a>
+        </div>
+        <div class="list">
+            <button id="logout"><img id="btn-logout" src="icons/logout.png" alt="">Logout</button>
+        </ul></div>
+    </div>
+    <div class="container">
+        <h1>Upload a File</h1>
+        <form action="upload.php" method="POST" enctype="multipart/form-data">
+        <label for="file" class="form-label"><ion-icon class="upload" name="cloud-upload-outline"></ion-icon></label> 
+        <input type="file" class="form-control" name="file" id="file">
+        <div class="showname"><h5 class="filename">Supported Only -> pdf, png, jpeg, jpg, gif</h5></div>
+        <button type="submit" class="btn btn-primary">Submit</button>  
+        </form>
+    </div>
+    <div class="show-data">
+        <h2>Uploaded Files</h2>
+    </div>
+   <script src="js/teachers.js"></script>
+</body>
+</html>
+
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Check if a file was uploaded without errors
+    if (isset($_FILES["file"]) && $_FILES["file"]["error"] == 0) {
+        $target_dir = "uploads/"; // Change this to the desired directory for uploaded files
+        $target_file = $target_dir . basename($_FILES["file"]["name"]);
+        $file_type = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+        // Check if the file is allowed (you can modify this to allow specific file types)
+        $allowed_types = array("jpg", "jpeg", "png", "gif", "pdf");
+        if (!in_array($file_type, $allowed_types)) {
+            echo "Sorry, only JPG, JPEG, PNG, GIF, and PDF files are allowed.";
+        } else {
+            // Move the uploaded file to the specified directory
+            if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
+                // File upload success, now store information in the database
+                $filename = $_FILES["file"]["name"];
+                $filesize = $_FILES["file"]["size"];
+                $filetype = $_FILES["file"]["type"];
+
+                // Database connection
+                $db_host = "localhost";
+                $db_user = "root";
+                $db_pass = "";
+                $db_name = "file_upload_download";
+
+                $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
+
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+
+                // Insert the file information into the database
+                $sql = "INSERT INTO files (filename, filesize, filetype) VALUES ('$filename', $filesize, '$filetype')";
+
+                if ($conn->query($sql) === TRUE) {
+                    echo "The file " . basename($_FILES["file"]["name"]) . " has been uploaded and the information has been stored in the database.";
+                } else {
+                    echo "Sorry, there was an error uploading your file and storing information in the database: " . $conn->error;
+                }
+
+                $conn->close();
+            } else {
+                echo "Sorry, there was an error uploading your file.";
+            }
+        }
+    } else {
+        echo "No file was uploaded.";
+    }
+    header("Location:upload.php");
+}?>
+
+
+
+
+----------------------------
+
+<?php
+//database connected
+$db_host = "localhost";
+$db_user = "root";
+$db_pass = "";
+$db_name = "file_upload_download";
+
+$conn = new mysqli($db_host,$db_user,$db_pass,$db_name);
+
+if($conn->connect_error) {
+    die("Connection failed: ".$conn->connect_error);
+}
+//fetch files from db
+
+$sql = "SELECT * FROM files";
+$result = $conn->query($sql);
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Uploaded files</title>
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/students.css">
+</head>
+<body>
+    <div class="nav">
+        <div class="logo">
+           <div class="profile"><img src="images/boy_profile.jpg" alt="" srcset=""></div>
+           <h4>Students<br><span>BCA Deparment</span></h4>
+        </div>
+        <div class="search">
+            <!-- <input type="search" name="search" placeholder="Search and Find" id="search-btn"> -->
+        </div>
+        <div class="logout">
+            <button id="logout-btn"><img id="btn-logout" src="icons/logout.png" alt="">Logout</button>
+        </div>
+    </div>
+
+	<div class="container mt-5">
+        <h2>Uploaded Files</h2>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>File Size</th>
+                    <th>File Type</th>
+                    <th>Download</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                // Display the uploaded files and download links
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        $file_path = "uploads/" . $row['filename'];
+                        ?>
+                        <tr>
+                            <td><?php echo $row['filename']; ?></td>
+                            <td><?php echo $row['filesize']; ?> bytes</td>
+                            <td><?php echo $row['filetype']; ?></td>
+                            <td><a href="<?php echo $file_path; ?>" class="btn btn-primary" download>Download</a></td>
+                        </tr>
+                        <?php
+                    }
+                } else {
+                    ?>
+                    <tr>
+                        <td colspan="4">No files uploaded yet.</td>
+                    </tr>
+                    <?php
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
+    <script src="js/students.js"></script>
+</body>
+</html>
+
+<?php
+$conn->close();
+?>
+
+----------------------------------------
+
+<?php
+//database connected
+$db_host = "localhost";
+$db_user = "root";
+$db_pass = "";
+$db_name = "file_upload_download";
+
+$conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+//fetch files from db
+if (isset($_GET['search'])) {
+    $filtervalue = $_GET['search'];
+    $sql = "SELECT * FROM files WHERE filename LIKE '%$filtervalue%'";
+} else {
+    $sql = "SELECT * FROM files";
+}
+$result = $conn->query($sql);
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Uploaded files</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/students.css">
+</head>
+<body>
+<div class="nav">
+    <div class="logo">
+        <div class="profile"><img src="images/boy_profile.jpg" alt="" srcset=""></div>
+        <h4>Students<br><span>BCA Department</span></h4>
+    </div>
+    <div class="search">
+        <!-- <input type="search" name="search" placeholder="Search and Find" id="search-btn"> -->
+    </div>
+    <div class="logout">
+        <button id="logout-btn"><img id="btn-logout" src="icons/logout.png" alt="">Logout</button>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col md-8">
+
+            <form action="" method="get">
+                <div class="input-group mb-3">
+                    <input type="search" class="form-control" value="<?php if (isset($_GET['search'])) { echo $_GET['search']; } ?>" name="search" placeholder="Search Here...">
+                    <button type="submit" class=" btn btn-primary">Search</button>
+                </div>
+            </form>
+
+        </div>
+
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table bordered table-dark">
+                        <thead>
+                        <tr>
+                            <th>Filename</th>
+                            <th>View</th>
+                            <th>Download</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                $file_path = "uploads/" . $row['filename'];
+                                ?>
+                                <tr>
+                                    <td><?php echo $row['filename']; ?></td>
+                                    <td>
+                                        <?php 
+                                        $filetype = $row['filetype'];
+                                        if (strpos($filetype,'pdf') !== false) {
+                                            echo '<img src="icons/pdf.png" width=50px; alt="PDF">';
+                                        }elseif(strpos($filetype,'png') !== false) {
+                                            echo '<img src="icons/png.png" width=50px; alt="PNG">';
+                                        }
+                                        elseif(strpos($filetype,'presentation') !== false) {
+                                            echo '<img src="icons/ppt.png" width=50px; alt="File">';
+                                        }
+                                        elseif(strpos($filetype,'html') !== false) {
+                                            echo '<img src="icons/word.png" width=50px; alt="HTML">';
+                                        }
+                                        elseif(strpos($filetype,'jpeg') !== false) {
+                                            echo '<img src="icons/jpg.png" width=50px; alt="JPEG">';
+                                        }
+                                        elseif(strpos($filetype,'gif') !== false) {
+                                            echo '<img src="icons/gif.png" width=50px; alt="GIF">';
+                                        }
+                                        elseif(strpos($filetype,'text') !== false) {
+                                            echo '<img src="icons/file.png" width=50px; alt="TEXT">';
+                                        }
+                                        elseif(strpos($filetype,'document') !== false) {
+                                            echo '<img src="icons/doc.png" width=50px; alt="DOC">';
+                                        }
+                                        else{
+                                            echo '<img src="icons/logout.png" width=50px; alt="File">';
+                                        }
+                                        ?>
+                                    </td>
+                                    <td><a href="<?php echo $file_path; ?>" class="btn btn-primary" download>Download</a></td>
+                                </tr>
+                                <?php
+                            }
+                        } else {
+                            ?>
+                            <tr>
+                                <td colspan="3">No Record Found</td>
+                            </tr>
+                            <?php
+                        }
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="js/students.js"></script>
+</body>
+</html>
+
+<?php
+$conn->close();
+?>
+
+
+-----------------------------------------------------------
+
+ <h2>Uploaded Files</h2>
+        <table class="table text-center table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Filename</th>
+                <th>Filetype</th>
+                <th>Remove</th>
+            </tr>
+        </thead>
+            <?php
+            $conn = mysqli_connect("localhost","root","","file_upload_download");
+            $sql2 = "SELECT * FROM `files` WHERE 1 ORDER BY upload_date DESC";
+            $result2 = mysqli_query($conn, $sql2);
+            while($fetch = mysqli_fetch_assoc($result2))
+            {
+                echo "";
+
+                ?>
+                <tbody>
+                <tr>
+                    <td><a href="./uploads/<?php echo $fetch['filename'] ?>"><?php echo $fetch['filename']?></a></td>
+                    <td><?php echo $fetch['filetype'] ?></td>
+                    <td><a href="delete.php?id=<?php echo $fetch['id']?>" id="delete" class="btn btn-outline-danger" > <img src="icons/delete.png" width=25px >Delete</a></td>
+                </tr>
+                </tbody>
+                <?php
+                "";
+            }
+            ?>
+         </table>
+
+--------------------------
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body class="bg-dark">
+<section class="py-5">
+
+    <div class="container">
+
+        <div class="row justify-content-center">
+
+            <div class="col-md-12">
+                
+                <div class="card"> 
+
+                    <div class="card-header">
+                    <h5 class="text-center">Upload Reports Between Two Dates Via From & To Dates</h5>
+                    </div>
+
+                    <div class="card-body">
+                     <form action="" method="GET">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="">From Date</label>
+                                    <input type="date" name="from_date" class="form-control" placeholder="From Date">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="">To Date</label>
+                                    <input type="date" name="to_date" class="form-control" placeholder="To Date">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="">Check</label><br>
+                                    <button type="submit" name="" class="btn btn-primary">Filter User</button>
+                                </div>
+                            </div>
+                        </div>
+                     </form>
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h6>Record List</h6>
+                        <hr>
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr class="text-center">
+                                    <th>Filename</th>
+                                    <th>FileType</th>
+                                    <th>Remove</th>
+                                    <th>UploadTime</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php  
+                                if(isset($_GET['from_date']) && isset($_GET['to_date']))
+                                {
+                                $from_date = $_GET['from_date'];
+                                $to_date = $_GET['to_date'];
+
+                                $con = mysqli_connect("localhost","root","","file_upload_download");
+                                $query = "SELECT * FROM files WHERE upload_date BETWEEN '$from_date' AND '$to_date' ";
+                                $query_run = mysqli_query($con,$query);
+                                if(mysqli_num_rows($query_run)>0)
+                                {
+                                    foreach($query_run as $row)
+                                    {
+                                        ?>
+                                        <tr class="text-center">
+                                        <td><a href="./uploads/<?php echo $row['filename'] ?>"><?php echo $row['filename']?></a></td>
+                                        <td><?php echo $row['filetype'] ?></td>
+                                        <td><a href="delete2.php?id=<?php echo $row['id']?>" id="delete" class="btn btn-outline-danger" > <img src="icons/delete.png" width=25px >Delete</a></td>
+                                        <td><?php echo $row['upload_date'] ?></td>
+                                        </tr>
+                                        <?php
+                                    }
+                                }else{
+                                    echo "No Record Found";
+                                }
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+</body>
+</html>
+
+
+<a href="<?php echo $file_path;?>"  download><img src="icons/download.png" alt="" width="25px"></a>
+<a href="./uploads/<?php echo $row['filename'];?>" target="_blank" ><img src="icons/eye.png" width="25px"></a>
+<a href="#"  id="like"><img src="icons/like.png" width="25px"></a>

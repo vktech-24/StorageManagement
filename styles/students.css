@@ -1,0 +1,283 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    scrollbar-width: none;
+}
+
+body{
+    width: 100vw;
+    height: 100vh;
+    background-color: aliceblue;
+}
+
+.nav{
+    width: 100%;
+    height: 90px;
+    background: rgb(226, 0, 38);
+    padding: 5px;
+}
+
+/*for logo styling*/
+.logo,
+.logout{
+   width: 49%;
+   height: 100%;
+   margin-left: 2px;
+}
+.logo{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.logo h4{
+    color: white;
+    font-size: 30px;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.profile{
+    height: 100%;
+    width: 80px;
+    background-color: white;
+    border-radius: 50%;
+    overflow: hidden;
+
+}
+
+.profile img{
+    width: 100%;
+}
+
+/*for search button styling*/
+
+/* .search{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#search-btn{
+    width: 98%;
+    height: 40px;
+    outline: none;
+    border: 2px solid rgba(43, 70, 226, 0.589);
+    border-radius: 5px;
+    padding-left: 5px;
+    transition: 0.2s;
+}
+
+#search-btn:hover{
+    border: 2px solid rgb(43, 70, 226);
+}
+
+#search-btn:active{
+    border: 2px solid rgb(43, 70, 226);
+} */
+/*for logout button styling*/
+
+.logout{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   justify-content: flex-end;
+   gap: 15px;
+}
+
+.logout img{
+    cursor: pointer;
+}
+
+#logout-btn{
+    width: 140px;
+    height: 40px;
+    color: white;
+    font-size: 19px;
+    background: rgb(0, 0, 0);
+    border: none;
+    outline: none;
+    border-radius: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+#btn-logout{
+    width: 25px;
+    height: 25px;
+}
+
+.menu{
+    width: 49%;
+    height: 100%;
+    display: none;
+}
+
+.card-body{
+        display:grid;
+        grid-template-columns:repeat(auto-fill,250px);
+        grid-auto-flow:row;
+        gap: 25px;
+        place-content: center;
+}
+
+.data{
+    width: 250px;
+    height: auto;
+  /*   background-color: #cc00a0; */
+    border-radius: 10px;
+    overflow: hidden;
+    display: grid;
+    place-items: start center;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+}
+
+.img{
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    width: 95%;
+    height: 150px;
+    margin-top: 5px;
+    background-color: rgb(247, 248, 248);
+    display: grid;
+    place-items: center;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+/* .title{
+    width: 95%;
+    height: auto;
+    overflow-x: hidden;
+    display: grid;
+    place-items: center start;
+    margin-top: 5px;
+} */
+.title{
+    width: 95%;
+    height: auto;
+    overflow-x: hidden;
+    display: grid;
+    place-items: center start;
+    margin-top: 5px;
+}
+
+.title h5{
+    color: rgb(0, 0, 0);
+}
+
+.dow-pre{
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 1px;
+   /*  border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px; */
+}
+
+.d-b{
+    width: 33.33%;
+    height: 100%;
+}
+
+.p-b{
+    width: 33.33%;
+    height: 100%;
+}
+
+.f-b{
+    width: 33.33%;
+    height: 100%;
+}
+.d-b,
+.p-b,
+.f-b p{
+    color:white;   
+    font-size: 12px;
+}
+
+.a{
+    width: 100%;
+    height: 30px;
+    background-color: rgb(50, 64, 255);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.a #like{
+    margin-top: 4px;
+}
+
+.p{
+    width: 100%;
+    height: 20px;
+    background-color: rgb(50, 64, 255);
+    display: grid;
+    place-items: center;
+}
+
+/* .dow{
+    width: 47%;
+    height: auto;
+    background-color: green;
+    outline: none;
+    border: none;
+    color:white;
+    border-radius: 5px;
+}
+
+.pre{
+    width: 47%;
+    height: auto;
+    background-color: rgb(19, 0, 128);
+    outline: none;
+    border: none;
+    color:white;
+    border-radius: 5px;
+} */
+
+#like img{
+    margin-top: -4px;
+}
+
+.si-dow{
+    display: flex;
+    width: 95%;
+    height: auto;
+}
+
+.si-dow h6{
+    font-size: 15px;
+}
+
+.size{
+    width: 40%;
+}
+
+.dow{
+    display: grid;
+    justify-content: center;
+    width: 60%;
+}
+
+@media only screen and (max-width: 500px){
+    .menu{
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        padding-right: 15px;
+        cursor: pointer;
+        gap: 10px;
+    }
+
+    .logout{
+        display: none;
+    }
+}
